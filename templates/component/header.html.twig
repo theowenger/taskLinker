@@ -1,0 +1,17 @@
+<nav>
+    <a href="index.html" id="logo">
+        <img src="{{ asset('assets/img/logo.png') }}" alt="Logo TaskLinker"/>
+    </a>
+    <ul id="main-menu">
+        <li class="{{ active == 'project' ? 'active' : '' }}">
+            <a href="{{ path('app_homepage') }}">
+                <i class="fa-solid fa-list-check fa-xl"></i><p class="hidden-text-queries">Projets</p>
+            </a>
+        </li>
+        <li class="{{ active == 'team' ? 'active' : '' }}">
+            <a href="{{ path('app_teampage') }}">
+                <i class="fa-regular fa-user fa-xl"></i><p class="hidden-text-queries">Équipe</p>
+            </a>
+        </li>
+    </ul>
+</nav>
