@@ -3,22 +3,30 @@
 namespace App\Entity;
 
 use App\Repository\EmployeeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[Entity(repositoryClass:EmployeeRepository::class)]
 class Employee
 {
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\GeneratedValue(strategy: "CUSTOM")]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
+    #[ORM\Column(type:"uuid", unique:true)]
+    private ?UuidInterface $id = null;
 
     #[ORM\Column(length: 255)]
     private string $firstName;
     #[ORM\Column(length: 255)]
     private string $lastName;
+
+    private string $fullName;
     #[ORM\Column(length: 255)]
     private string $mail;
     #[ORM\Column(length: 255)]
@@ -28,10 +36,19 @@ class Employee
     #[ORM\Column(length: 255)]
     private \DateTime $startDate;
 
+    #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'employees')]
+    #[Groups(['employee_projects'])]
+    private Collection $projects;
+
+    public function __construct()
+    {
+        $this->projects = new ArrayCollection();
+    }
+
     /**
-     * @return int|null
+     * @return UuidInterface
      */
-    public function getId(): ?int
+    public function getId(): UuidInterface
     {
         return $this->id;
     }
@@ -68,6 +85,11 @@ class Employee
     {
         $this->lastName = $lastName;
         return $this;
+    }
+
+    public function getFullName(): string
+    {
+        return $this->lastName . ' ' .  $this->firstName;
     }
 
     /**
@@ -137,6 +159,37 @@ class Employee
         $this->startDate = $startDate;
         return $this;
     }
+
+    /**
+     * @return Collection
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    /**
+     * @param Collection $projects
+     * @return Employee
+     */
+    public function setProjects(Collection $projects): self
+    {
+        $this->projects = $projects;
+        return $this;
+    }
+
+    public function addProject(Project $project): void
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects->add($project);
+        }
+    }
+
+    public function removeProject(Project $project): void
+    {
+        $this->projects->removeElement($project);
+    }
+
 
     public function generateAvatar(): void
     {

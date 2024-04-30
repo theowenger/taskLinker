@@ -14,8 +14,34 @@ html, body {
 .flex-row {
     display: flex;
     flex-direction: row;
+
+}
+.flex-row-input {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.height100vh {
     min-height: 100vh;
 }
+
+.form-employees-container {
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    overflow-y: hidden;
+}
+
+.form-employees-container option {
+    background-color: #1C5B50;
+    color: white;
+}
+
 
 .sf-toolbar {
     position: fixed;
@@ -219,6 +245,26 @@ div#projects-container {
     letter-spacing: 0em;
     text-align: center;
     text-decoration: none;
+}
+
+.link-button {
+    background: none;
+    border: none;
+    color: #E14343;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.pen-color {
+    color: #4D8077;
+}
+
+.trash-color {
+    color: #E14343;
 }
 
 div#tasks-container {
@@ -450,7 +496,7 @@ button.button.button-submit {
     border: none;
     color: #ffffff;
     height: 70px;
-    margin-top: 5px;
+    margin-top: 30px;
 }
 
 form ul {

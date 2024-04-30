@@ -21,20 +21,25 @@ class Project
     #[ORM\Column(length: 255)]
     private string $name;
 
+    #[ORM\Column(length: 255)]
     private \DateTimeImmutable $startDate;
+
+    #[ORM\Column(type:"boolean")]
+    private bool $isArchived = false;
 
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'task')]
     #[Groups(['project_tasks'])]
     private Collection $tasks;
-    #[ORM\ManyToMany(targetEntity: Employee::class, mappedBy: 'project')]
+    #[ORM\ManyToMany(targetEntity: Employee::class, inversedBy: 'participatingProjects')]
+    #[ORM\JoinTable(name: 'projectsEmployees')]
     #[Groups(['project_employees'])]
     private Collection $employees;
-
 
     public function __construct()
     {
         $this->employees = new ArrayCollection();
         $this->tasks = new ArrayCollection();
+        $this->startDate = new \DateTimeImmutable();
     }
 
     /**
@@ -95,6 +100,18 @@ class Project
         $this->employees = $employees;
         return $this;
     }
+    public function addEmployee(Employee $employee): void
+    {
+        if (!$this->employees->contains($employee)) {
+            $this->employees->add($employee);
+        }
+    }
+
+    public function removeEmployee(Employee $employee): void
+    {
+        $this->employees->removeElement($employee);
+    }
+
 
     /**
      * @return Collection
@@ -110,6 +127,23 @@ class Project
     public function setTasks(Collection $tasks): self
     {
         $this->tasks = $tasks;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isArchived(): bool
+    {
+        return $this->isArchived;
+    }
+
+    /**
+     * @param bool $isArchived
+     */
+    public function setIsArchived(bool $isArchived): self
+    {
+        $this->isArchived = $isArchived;
         return $this;
     }
 }

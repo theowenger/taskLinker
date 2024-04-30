@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    {% include 'component/header.html.twig' with {'active': 'project'} %}
+
+    <main>
+        <header>
+            <div id="current-user"></div>
+            <div id="title-page">
+                <div class="flex-header">
+                    <h1>{{ project.name }}</h1>
+                </div>
+            </div>
+        </header>
+        <body>
+        <div id="content">
+            <form method="post" action="{{ path('api_update_project', {'id': project.id}) }}">
+                {{ form_row(form._token) }}
+                {{ form_row(form.name) }}
+                {{ form_row(form.employees, { 'attr': {'class': 'select2'} }) }}
+                {{ form_row(form.save) }}
+            </form>
+        </div>
+        </body>
+    </main>
+
+    <!-- Inclure jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <!-- Inclure Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Inclure Select2 JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- Initialiser Select2 -->
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+
+{% endblock %}

@@ -3,16 +3,23 @@
 namespace App\DataFixtures;
 
 use App\Entity\Employee;
+use App\Entity\Project;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
+    /** @var Employee[] */
+    private array $employees = [];
+
+    /** @var Project[]  */
+    private array $projects = [];
+
     public function load(ObjectManager $manager): void
     {
 
         $this->loadEmployees($manager, 20);
-        $this->loadProjects();
+        $this->loadProjects($manager, 20);
         $this->loadTasks();
 
         $manager->flush();
@@ -32,16 +39,34 @@ class AppFixtures extends Fixture
             $employee->setFirstName($firstNames[$i])
                 ->setLastName($lastNames[$i])
                 ->setMail($firstNames[$i] . '.' . $lastNames[$i] . '@gmail.com')
-            ->setStartDate(new \DateTime())
-            ->setStatus($i % 2 === 0 ? 'CDI' : 'CDD')
-            ->generateAvatar();
+                ->setStartDate(new \DateTime())
+                ->setStatus($i % 2 === 0 ? 'CDI' : 'CDD')
+                ->generateAvatar();
+
+            $this->employees[] = $employee;
         }
     }
 
-    public function loadProjects() : void
+    public function loadProjects(ObjectManager $manager, int $count): void
     {
         //todo
+        for ($i = 1; $i < $count; $i++) {
+            $project = new Project();
+            $project
+                ->setName("project n°$i")
+                ->setIsArchived($i % 2 === 0);
+
+            for ($j = 0; $j < 3; $j++) {
+                $project->addEmployee($this->employees[$j]);
+            }
+
+            $manager->persist($project);
+
+
+            $this->projects[] = $project;
+        }
     }
+
 
     public function loadTasks(): void
     {
