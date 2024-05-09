@@ -23,7 +23,7 @@ class UpdateProjectController extends AbstractController
 
     }
 
-    #[Route('/project/{id}/update', name: 'api_update_project', methods: ['POST'])]
+    #[Route('/projects/{id}/update', name: 'api_update_project', methods: ['POST'])]
     public function __invoke(Request $request, ValidatorInterface $validator, string $id, EntityManagerInterface $entityManager): Response
     {
 

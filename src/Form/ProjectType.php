@@ -22,8 +22,11 @@ class ProjectType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options):void
     {
-        /** @var Project $project */
-        $project = $options['data'];
+        $project = null;
+        if (array_key_exists('data', $options)) {
+            /** @var Project $project */
+            $project = $options['data'];
+        }
 
         $builder
             ->add('name', TextType::class, [
@@ -32,16 +35,16 @@ class ProjectType extends AbstractType
                 'constraints' => [
                     new Assert\Length(min:3, max: 255)
                 ],
-                'data' => $project?->getName(),
+                'data' => $project?->getName() ?? '',
             ])
             ->add('employees', EntityType::class, [
                 'class' => Employee::class,
-                'choice_label' => 'fullName', // Assurez-vous d'avoir une méthode getFullName() dans votre entité Employee
-                'multiple' => true, // Permet la sélection de plusieurs employés
-                'expanded' => false, // Mettez-le à true si vous voulez que les options soient affichées sous forme de boutons
-                'required' => false, // Facultatif, selon vos besoins
+                'choice_label' => 'fullName',
+                'multiple' => true,
+                'expanded' => false,
+                'required' => false,
                 'label' => 'Inviter des membres',
-                'choices' => $options['employees'], // Utilisez les employés disponibles que vous avez passés depuis votre contrôleur
+                'choices' => $options['employees'],
             ])
             ->add('save', SubmitType::class,  [
                 'label' => 'Modifier',

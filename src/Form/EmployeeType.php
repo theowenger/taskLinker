@@ -46,7 +46,6 @@ class EmployeeType extends AbstractType
                 ],
                 'data' => $employee?->getMail(),
             ])
-            //documentation du DateType, chercher un widget qui me retourne un datePicker standard de browser
             ->add('startDate', DateType::class, [
                 'required' => true,
                 'label' => "Date d'entrée",

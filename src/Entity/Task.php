@@ -18,18 +18,19 @@ class Task
     private ?int $id = null;
     #[ORM\Column(length: 255)]
     private string $name;
-    #[ORM\Column(type: Types::TEXT)]
-    private string $description;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
     #[ORM\Column]
     private \DateTimeImmutable $startDate;
-    #[ORM\Column]
-    private ?\DateTime $deadline;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $deadline = null;
 
-    #[ORM\OneToMany(targetEntity: Employee::class, mappedBy: 'employee')]
-    private Employee $employee;
+    #[ORM\ManyToOne(targetEntity: Employee::class, inversedBy: 'tasks')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Employee $employee = null;
     #[ORM\Column]
     private string $status;
-    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'projects')]
+    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'tasks')]
     private Project $project;
 
     /**
@@ -58,17 +59,18 @@ class Task
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
+     * @return Task
      */
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
         return $this;
@@ -126,17 +128,18 @@ class Task
     }
 
     /**
-     * @return Employee
+     * @return Employee|null
      */
-    public function getEmployee(): Employee
+    public function getEmployee(): ?Employee
     {
         return $this->employee;
     }
 
     /**
-     * @param Employee $employee
+     * @param Employee|null $employee
+     * @return Task
      */
-    public function setEmployee(Employee $employee): self
+    public function setEmployee(?Employee $employee): self
     {
         $this->employee = $employee;
         return $this;

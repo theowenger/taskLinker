@@ -27,11 +27,11 @@ class Project
     #[ORM\Column(type:"boolean")]
     private bool $isArchived = false;
 
-    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'task')]
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'project')]
     #[Groups(['project_tasks'])]
     private Collection $tasks;
-    #[ORM\ManyToMany(targetEntity: Employee::class, inversedBy: 'participatingProjects')]
-    #[ORM\JoinTable(name: 'projectsEmployees')]
+    #[ORM\ManyToMany(targetEntity: Employee::class, inversedBy: 'projects')]
+    #[ORM\JoinTable(name: 'project_employees')]
     #[Groups(['project_employees'])]
     private Collection $employees;
 
@@ -97,6 +97,7 @@ class Project
      */
     public function setEmployees(Collection $employees): self
     {
+        $this->employees = $employees;
         $this->employees = $employees;
         return $this;
     }

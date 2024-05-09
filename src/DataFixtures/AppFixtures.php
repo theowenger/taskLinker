@@ -4,8 +4,11 @@ namespace App\DataFixtures;
 
 use App\Entity\Employee;
 use App\Entity\Project;
+use App\Entity\Task;
+use App\Enum\TaskStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Random\RandomException;
 
 class AppFixtures extends Fixture
 {
@@ -15,15 +18,22 @@ class AppFixtures extends Fixture
     /** @var Project[]  */
     private array $projects = [];
 
+    /**
+     * @throws \Exception
+     */
     public function load(ObjectManager $manager): void
     {
 
         $this->loadEmployees($manager, 20);
         $this->loadProjects($manager, 20);
-        $this->loadTasks();
+
+        foreach ($this->projects as $project) {
+            $this->loadTasks($manager, $project);
+        }
 
         $manager->flush();
     }
+
 
     public function loadEmployees(ObjectManager $manager, int $count): void
     {
@@ -47,17 +57,22 @@ class AppFixtures extends Fixture
         }
     }
 
+    /**
+     * @throws RandomException
+     */
     public function loadProjects(ObjectManager $manager, int $count): void
     {
         //todo
         for ($i = 1; $i < $count; $i++) {
+
             $project = new Project();
             $project
                 ->setName("project n°$i")
                 ->setIsArchived($i % 2 === 0);
 
             for ($j = 0; $j < 3; $j++) {
-                $project->addEmployee($this->employees[$j]);
+                $randomEmployee = $this->employees[random_int(0, count($this->employees) - 1)];
+                $project->addEmployee($randomEmployee);
             }
 
             $manager->persist($project);
@@ -67,9 +82,34 @@ class AppFixtures extends Fixture
         }
     }
 
-
-    public function loadTasks(): void
+    /**
+     * @throws \Exception
+     */
+    public function loadTasks(ObjectManager $manager, Project $project): void
     {
-        //todo
+        for($i = 1; $i <= 6; $i++) {
+            $arrayEmployee = $project->getEmployees()->toArray();
+            $randomEmployee = $arrayEmployee[random_int(0, count($arrayEmployee) - 1)];
+
+            $task = new Task();
+            $task->setProject($project)
+                ->setStartDate(new \DateTimeImmutable('now -' . $i . ' day'))
+                ->setName("Task $i")
+                ->setDescription("Task description $i")
+                ->setDeadline(new \DateTime('now +' . $i . ' day'))
+                ->setEmployee($randomEmployee)
+            ;
+            if ($i === 1 || $i === 2) {
+                $task->setStatus(TaskStatus::TODO->value);
+            }
+            if ($i === 3 || $i === 4) {
+                $task->setStatus(TaskStatus::DOING->value);
+            }
+            if ($i === 5 || $i === 6) {
+                $task->setStatus(TaskStatus::DONE->value);
+            }
+
+            $manager->persist($task);
+        }
     }
 }

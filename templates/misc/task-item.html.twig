@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    {% include 'component/header.html.twig' with {'active': 'project'} %}
+
+    <main>
+        <header>
+            <div id="current-user"></div>
+            <div id="title-page">
+                <div class="flex-header">
+                    <h1>{{ task.name|default("") }}</h1>
+                </div>
+            </div>
+        </header>
+        <body>
+        <div id="content">
+
+            {% if task and task.id is not null %}
+            <form method="post" action="{{ path('api_update_task', {'id': task.id , 'projectId': project.id}) }}">
+                {% else %}
+                <form method="post" action="{{ path('api_create_task', {'id': project.id}) }}">
+                    {% endif %}
+                    {{ form_row(form._token) }}
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.description) }}
+                    {{ form_row(form.deadline) }}
+                    {{ form_row(form.status) }}
+                    {{ form_row(form.employee) }}
+                    {{ form_row(form.save) }}
+                    <a class="delete-task" href="#" onclick="return confirmDelete('{{ task.id }}', '{{ task.name }}', '{{ project.id }}');">
+                        Supprimer la tâche
+                    </a>
+                </form>
+
+        </div>
+        </body>
+    </main>
+
+    <script>
+        function confirmDelete(id, name, projectId) {
+            const confirmationMessage = `Êtes-vous sûr de vouloir supprimer ${name} ?`;
+            const confirmDelete = confirm(confirmationMessage);
+
+            if (confirmDelete) {
+                const xhr = new XMLHttpRequest();
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        window.location.href = `/projects/${projectId}`;
+                    } else {
+                        console.error("Erreur lors de la suppression de la tache :", xhr.statusText);
+                    }
+                };
+
+                xhr.open("POST", `/tasks/${id}/delete`);
+                xhr.send();
+                return false;
+            } else {
+                return true;
+            }
+        }
+    </script>
+
+{% endblock %}

@@ -40,9 +40,13 @@ class Employee
     #[Groups(['employee_projects'])]
     private Collection $projects;
 
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'employee')]
+    private Collection $tasks;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     /**
@@ -157,6 +161,36 @@ class Employee
     public function setStartDate(\DateTime $startDate): self
     {
         $this->startDate = $startDate;
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks[] = $task;
+            $task->setEmployee($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getEmployee() === $this) {
+                $task->setEmployee(null);
+            }
+        }
+
         return $this;
     }
 

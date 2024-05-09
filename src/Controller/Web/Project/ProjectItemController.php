@@ -57,12 +57,15 @@ class ProjectItemController extends AbstractController
         $project = $this->projectRepository->find($id);
 
         $project->getEmployees()->initialize();
+        $project->getTasks()->initialize();
 
         $employeesProject = $project->getEmployees();
+        $tasksProject = $project->getTasks();
 
         $html = $this->twig->render('misc/project-item.html.twig', [
             "project" => $project,
             "employees" => $employeesProject,
+            "tasks" => $tasksProject,
         ]);
 
         return new Response($html);

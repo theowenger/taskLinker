@@ -27,19 +27,22 @@ class ProjectItemEditController extends AbstractController
      * @throws RuntimeError
      * @throws LoaderError
      */
-    #[Route('/projects/{id}/edit', name: "app_project_item_edit")]
-    public function __invoke(string $id): Response
+    #[Route('/projects/{id}/edit', name: "app_project_item_edit", requirements: ["id" => "[^/]*"], defaults: ["id" => null])]
+    public function __invoke(string $id = null): Response
     {
-
-        /** @var Project $project */
-        $project = $this->projectRepository->find($id);
-
         $employees = $this->employeeRepository->findAll();
-        dump($employees);
+
+        if($id === null) {
+            $project = new Project();
+        } else {
+            $project = $this->projectRepository->find($id);
+        }
+
 
         $form = $this->createForm(ProjectType::class, $project, [
             'employees' => $employees,
         ]);
+
 
         $html = $this->twig->render('misc/project-item-edit.html.twig', [
             "project" => $project,
