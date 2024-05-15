@@ -19,6 +19,9 @@
                 {% else %}
                 <form method="post" action="{{ path('api_create_project') }}">
                     {% endif %}
+                    {% if errors is defined %}
+                        <p class="error-form">{{ errors }}</p>
+                    {% endif %}
                     {{ form_row(form._token) }}
                     {{ form_row(form.name) }}
                     {{ form_row(form.employees, { 'attr': {'class': 'select2'} }) }}

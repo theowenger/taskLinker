@@ -267,6 +267,11 @@ div#projects-container {
     color: #E14343;
 }
 
+.error-form {
+    color: #E14343;
+    font-style: italic;
+}
+
 div#tasks-container {
     display: flex;
     gap: 10px;

@@ -10,14 +10,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateProjectController extends AbstractController
 {
 
-    public function __construct(private readonly ProjectRepository $projectRepository, private readonly EmployeeRepository $employeeRepository)
+    public function __construct(private readonly EmployeeRepository $employeeRepository)
     {
 
     }
@@ -48,9 +47,9 @@ class CreateProjectController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('app_project_item', ['id' => $project->getId()]);
-
         }
 
-        return $this->redirectToRoute('app_project_item_edit');
+        //todo: afficher gestion des erreurs
+        return $this->redirectToRoute('app_project_item_edit', ['errors' => $form->getErrors(true)]);
     }
 }

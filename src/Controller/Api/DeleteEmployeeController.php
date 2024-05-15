@@ -18,7 +18,7 @@ use Twig\Environment;
 class DeleteEmployeeController extends AbstractController
 {
 
-    public function __construct(private readonly  ProjectRepository $projectRepository, private readonly EmployeeRepository $employeeRepository)
+    public function __construct( private readonly EmployeeRepository $employeeRepository)
     {
 
     }
@@ -34,11 +34,13 @@ class DeleteEmployeeController extends AbstractController
         }
 
         $projects = $employee->getProjects();
+        $tasks = $employee->getTasks();
 
         foreach ($projects as $project) {
             $project->removeEmployee($employee);
-//            $employee->removeProject($project);
-//            $entityManager->persist($projects);
+        }
+        foreach ($tasks as $task) {
+            $task->removeEmployee($employee);
         }
 
 

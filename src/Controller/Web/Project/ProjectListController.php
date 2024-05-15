@@ -32,8 +32,6 @@ class ProjectListController extends AbstractController
 
         $projects = $this->projectRepository->findBy(['isArchived' => false]);
 
-        //todo: pour la creation/edition de projet, mettre l'id en optionnel
-
         $html = $this->twig->render('misc/project-list.html.twig', [
             "projects" => $projects
         ]);

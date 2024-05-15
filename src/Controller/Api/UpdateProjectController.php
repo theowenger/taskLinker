@@ -18,7 +18,7 @@ use Twig\Environment;
 class UpdateProjectController extends AbstractController
 {
 
-    public function __construct(private readonly Environment $twig,private readonly ProjectRepository $projectRepository, private readonly EmployeeRepository $employeeRepository)
+    public function __construct(private readonly ProjectRepository $projectRepository, private readonly EmployeeRepository $employeeRepository)
     {
 
     }

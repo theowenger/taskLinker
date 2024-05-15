@@ -7,6 +7,7 @@ use App\Form\ProjectType;
 use App\Repository\EmployeeRepository;
 use App\Repository\ProjectRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
@@ -28,8 +29,13 @@ class ProjectItemEditController extends AbstractController
      * @throws LoaderError
      */
     #[Route('/projects/{id}/edit', name: "app_project_item_edit", requirements: ["id" => "[^/]*"], defaults: ["id" => null])]
-    public function __invoke(string $id = null): Response
+    public function __invoke(string $id = null, Request $request): Response
     {
+
+        $errors = $request->query->get('errors');
+        dump($errors);
+
+
         $employees = $this->employeeRepository->findAll();
 
         if($id === null) {
@@ -47,7 +53,8 @@ class ProjectItemEditController extends AbstractController
         $html = $this->twig->render('misc/project-item-edit.html.twig', [
             "project" => $project,
             "employees" => $employees,
-            "form" => $form->createView()
+            "form" => $form->createView(),
+            "errors" => $errors,
         ]);
 
         return new Response($html);

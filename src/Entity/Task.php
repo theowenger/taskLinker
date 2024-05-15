@@ -145,6 +145,12 @@ class Task
         return $this;
     }
 
+    public function removeEmployee(Employee $employee): self
+    {
+        $this->employee = null;
+        return $this;
+    }
+
     /**
      * @return Project
      */
