@@ -35,10 +35,18 @@ class UpdateEmployeeController extends AbstractController
 
         $form = $this->createForm(EmployeeType::class, $employee);
 
+        $roles = $request->request->get('employee')['roles'];
+
+        if (is_string($roles) && !empty($roles)) {
+            $roles = [$roles];
+        }
+
+        $request->request->set('employee', array_merge((array)$request->request->get('employee'), ['roles' => $roles]));
+
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $employee->generateAvatar();
             $entityManager->persist($employee);
             $entityManager->flush();

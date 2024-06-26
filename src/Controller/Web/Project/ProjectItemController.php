@@ -6,9 +6,11 @@ use App\Entity\Project;
 use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -28,7 +30,8 @@ class ProjectItemController extends AbstractController
      * @throws LoaderError
      */
     #[Route('/projects/{id}', name: "app_project_item")]
-    public function __invoke(string $id = null): Response
+    #[IsGranted('ROLE_USER')]
+    public function __invoke(string $id = null, Security $security): Response
     {
 
         if($id === null) {
@@ -53,6 +56,8 @@ class ProjectItemController extends AbstractController
             return new Response($html);
         }
 
+        $user = $security->getUser();
+
         /** @var Project $project */
         $project = $this->projectRepository->find($id);
 
@@ -61,6 +66,11 @@ class ProjectItemController extends AbstractController
 
         $employeesProject = $project->getEmployees();
         $tasksProject = $project->getTasks();
+        dump($user->getRoles());
+
+        if(!$employeesProject->contains($user) && !in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            return $this->redirectToRoute('app_project_list');
+        }
 
         $html = $this->twig->render('misc/project-item.html.twig', [
             "project" => $project,

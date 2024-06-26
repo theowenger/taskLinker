@@ -3,24 +3,22 @@
 namespace App\Form;
 
 use App\Entity\Employee;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class EmployeeType extends AbstractType
+class RegistrationType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options):void
     {
-        /** @var Employee $employee */
-        $employee = $options['data'];
 
         $builder
             ->add('lastName', TextType::class, [
@@ -29,7 +27,9 @@ class EmployeeType extends AbstractType
                 'constraints' => [
                     new Assert\Length(min:3, max: 255)
                 ],
-                'data' => $employee?->getLastName(),
+                'label_attr' => [
+                    'class' => 'text-white',
+                ],
             ])
             ->add('firstName', TextType::class, [
                 'required' => true,
@@ -37,45 +37,29 @@ class EmployeeType extends AbstractType
                 'constraints' => [
                     new Assert\Length(min:3, max: 255)
                 ],
-                'data' => $employee?->getFirstName(),
+                'label_attr' => [
+                    'class' => 'text-white',
+                ],
             ])
             ->add('mail', EmailType::class, [
                 'required' => true,
-                'label' => 'Email',
+                'label' => 'E-mail',
                 'constraints' => [
                     new Assert\Length(min:3, max: 255)
                 ],
-                'data' => $employee?->getMail(),
-            ])
-            ->add('startDate', DateType::class, [
-                'required' => true,
-                'label' => "Date d'entrée",
-                'widget' => 'single_text',
-                'html5' => true,
-                'format' => 'yyyy-MM-dd',
-                'data' => $employee?->getStartDate(),
-            ])
-            ->add('status', TextType::class, [
-                'required' => true,
-                'label' => 'Statut',
-                'constraints' => [
-                    new Assert\Length(min:3, max: 15)
+                'label_attr' => [
+                    'class' => 'text-white',
                 ],
-                'data' => $employee?->getStatus(),
             ])
-            ->add('roles', ChoiceType::class, [
-                'choices'  => [
-                    'Utilisateur' => 'ROLE_USER',
-                    'Administrateur' => 'ROLE_ADMIN',
-                ],
-                'multiple' => true, // Permet de choisir plusieurs rôles
-//                'expanded' => true,
-//                'required' => true,
-                'label' => 'Rôles',
-//                'data' => $employee?->getRoles()[0] ?? 'ROLE_USER',
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'The password fields must match.',
+                'required' => true,
+                'first_options' => ['label' => 'Mot de passe', 'label_attr' => ['class' => 'text-white']],
+                'second_options' => ['label' => 'Confirmation Mot de passe', 'label_attr' => ['class' => 'text-white']],
             ])
             ->add('save', SubmitType::class,  [
-                'label' => 'Enregistrer',
+                'label' => 'Continuer',
                 'attr' => [
                     'class' => 'button button-submit'
                 ]
@@ -92,5 +76,4 @@ class EmployeeType extends AbstractType
             'csrf_token_id' => 'employee_token',
         ]);
     }
-
 }

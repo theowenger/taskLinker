@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    {% include 'component/header.html.twig' with {'active': null} %}
+
+    <main>
+        <header>
+            {% include 'component/avatar-header.html.twig' %}
+        </header>
+        <body>
+        <div id="content">
+            <div class="access-denied-container">
+                <h2>Oups !</h2>
+                <p>On dirait que vous n'avez pas accès à cette page</p>
+                <p>Veuillez contacter un administrateur ou
+                    <a href="/">retourner à l'accueil</a>
+                </p>
+            </div>
+        </div>
+        </body>
+    </main>
+
+{% endblock %}

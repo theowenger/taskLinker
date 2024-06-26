@@ -6,6 +6,7 @@ use App\Entity\Project;
 use App\Form\ProjectType;
 use App\Repository\EmployeeRepository;
 use App\Repository\ProjectRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,12 +30,11 @@ class ProjectItemEditController extends AbstractController
      * @throws LoaderError
      */
     #[Route('/projects/{id}/edit', name: "app_project_item_edit", requirements: ["id" => "[^/]*"], defaults: ["id" => null])]
+    #[IsGranted('ROLE_ADMIN')]
     public function __invoke(string $id = null, Request $request): Response
     {
 
         $errors = $request->query->get('errors');
-        dump($errors);
-
 
         $employees = $this->employeeRepository->findAll();
 

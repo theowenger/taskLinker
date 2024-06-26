@@ -3,28 +3,29 @@
 
     {% include 'component/header.html.twig' with {'active': 'team'} %}
 
-    <main>
-        <header>
-            <div id="current-user"></div>
-            <div id="title-page">
-                <h1>{{ employee.firstName }} {{ employee.lastName }}</h1>
-            </div>
-        </header>
-        <body>
-        <div id="content">
-            <form method="post" action="{{ path('api_update_employee', {'id': employee.id}) }}">
-                {{ form_row(form._token) }}
-                {{ form_row(form.lastName) }}
-                {{ form_row(form.firstName) }}
-                {{ form_row(form.mail) }}
-                <div class="flex-row-input space-between">
-                    {{ form_row(form.startDate) }}
-                    {{ form_row(form.status) }}
-                </div>
-                {{ form_row(form.save) }}
-            </form>
+<main>
+    <header>
+        {% include 'component/avatar-header.html.twig' %}
+        <div id="title-page">
+            <h1>{{ employee.firstName }} {{ employee.lastName }}</h1>
         </div>
-        </body>
-    </main>
+    </header>
+    <body>
+    <div id="content">
+        <form method="post" action="{{ path('api_update_employee', {'id': employee.id}) }}">
+            {{ form_row(form._token) }}
+            {{ form_row(form.lastName) }}
+            {{ form_row(form.firstName) }}
+            {{ form_row(form.mail) }}
+            <div class="flex-row-input space-between">
+                {{ form_row(form.startDate) }}
+                {{ form_row(form.status) }}
+            </div>
+            {{ form_row(form.roles) }}
+            {{ form_row(form.save) }}
+        </form>
+    </div>
+    </body>
+</main>
 
 {% endblock %}

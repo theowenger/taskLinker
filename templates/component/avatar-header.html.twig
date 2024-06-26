@@ -1,0 +1,5 @@
+<div id="current-user" class="connected-user">
+    {% if app.user is not null %}
+        <a href="/logout" class="employee-avatar connected-avatar">{{ app.user.avatar }}</a>
+    {% endif %}
+</div>

@@ -5,7 +5,7 @@
 
     <main>
         <header>
-            <div id="current-user"></div>
+            {% include 'component/avatar-header.html.twig' %}
             <div id="title-page">
                 <div class="flex-header">
                     <h1>{{ task.name|default("") }}</h1>

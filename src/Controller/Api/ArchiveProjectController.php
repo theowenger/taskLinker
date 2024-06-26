@@ -6,6 +6,7 @@ use App\Entity\Project;
 use App\Repository\EmployeeRepository;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +22,7 @@ class ArchiveProjectController extends AbstractController
 
     }
     #[Route('/project/{id}/archive', name: 'api_archive_project', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN', message: "Permission denied", statusCode: 403)]
     public function __invoke(Request $request, ValidatorInterface $validator, string $id): Response
     {
 

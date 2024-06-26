@@ -6,6 +6,7 @@ use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\ProjectRepository;
 use App\Repository\TaskRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,6 +35,7 @@ class TaskItemController extends AbstractController
      * @throws LoaderError
      */
     #[Route('/project/{projectId}/tasks/{id}', name: 'app_task_item')]
+    #[IsGranted('ROLE_USER')]
     public function __invoke( Request $request, string $projectId, string $id = null): Response
     {
         if ($id === null) {

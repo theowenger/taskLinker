@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    {% include 'component/header.html.twig' with {'active': 'team'} %}
+
+    <main>
+        <header>
+            {% include 'component/avatar-header.html.twig' %}
+            <div id="title-page">
+                <h1></h1>
+            </div>
+        </header>
+        <body>
+        <div id="content">
+            <div class="registration-container">
+                <h2 class="text-white">S'inscrire</h2>
+                <form method="post" action="{{ path('employee_registration') }}">
+                    {{ form_row(form._token) }}
+                    {{ form_row(form.lastName) }}
+                    {{ form_row(form.firstName) }}
+                    {{ form_row(form.mail) }}
+                    {{ form_row(form.password.first) }}
+                    {{ form_row(form.password.second) }}
+                    {{ form_row(form.save) }}
+                </form>
+                <p class="text-white pt-20">Vous avez déjà <a class="text-white" href="/login">un compte?</a></p>
+            </div>
+        </div>
+        </body>
+    </main>
+
+{% endblock %}

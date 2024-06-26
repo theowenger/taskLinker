@@ -4,6 +4,8 @@ namespace App\Controller\Web\Employee;
 
 use App\Form\EmployeeType;
 use App\Repository\EmployeeRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,13 +30,16 @@ class EmployeeItemController extends AbstractController
      * @throws LoaderError
      */
     #[Route('/employees/{id}/edit', name: "app_employee_item")]
-    public function homepage(Request $request, string $id): Response
+    #[IsGranted('ROLE_ADMIN', message: "Permission denied", statusCode: 403)]
+    public function homepage(Request $request, string $id, EntityManagerInterface $entityManager): Response
     {
 
         $employee = $this->employeeRepository->find($id);
+        if (!$employee) {
+            throw $this->createNotFoundException('Aucun employé trouvé pour cet ID.');
+        }
 
         $form = $this->createForm(EmployeeType::class, $employee);
-
 
         $html = $this->twig->render('misc/employee-item.html.twig',[
             "employee" => $employee,

@@ -3,6 +3,7 @@
 namespace App\Controller\Web\Employee;
 
 use App\Repository\EmployeeRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +28,7 @@ class EmployeeListController extends AbstractController
      * @throws LoaderError
      */
     #[Route('/employees', name: "app_employee_list")]
+    #[IsGranted('ROLE_USER')]
     public function homepage(Request $request): Response
     {
 

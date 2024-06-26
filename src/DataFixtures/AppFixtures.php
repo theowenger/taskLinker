@@ -8,6 +8,8 @@ use App\Entity\Task;
 use App\Enum\TaskStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Random\RandomException;
 
 class AppFixtures extends Fixture
@@ -17,6 +19,11 @@ class AppFixtures extends Fixture
 
     /** @var Project[]  */
     private array $projects = [];
+
+    public function __construct(private readonly UserPasswordHasherInterface $userPasswordHasher)
+    {
+
+    }
 
     /**
      * @throws \Exception
@@ -44,14 +51,20 @@ class AppFixtures extends Fixture
 
         for ($i = 1; $i < $count; $i++) {
             $employee = new Employee();
-            $manager->persist($employee);
+
+            $hasher = $this->userPasswordHasher;
+            $hashedPassword = $hasher->hashPassword($employee, "secret");
 
             $employee->setFirstName($firstNames[$i])
                 ->setLastName($lastNames[$i])
                 ->setMail($firstNames[$i] . '.' . $lastNames[$i] . '@gmail.com')
+                ->setPassword($hashedPassword)
                 ->setStartDate(new \DateTime())
                 ->setStatus($i % 2 === 0 ? 'CDI' : 'CDD')
+                ->setRoles($i % 2 === 0 ? ['ROLE_USER'] : ['ROLE_ADMIN'])
                 ->generateAvatar();
+
+            $manager->persist($employee);
 
             $this->employees[] = $employee;
         }

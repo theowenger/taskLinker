@@ -9,10 +9,15 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
+/**
+ * @method string getUserIdentifier()
+ */
 #[Entity(repositoryClass:EmployeeRepository::class)]
-class Employee
+class Employee implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
     #[ORM\Id]
@@ -29,12 +34,18 @@ class Employee
     private string $fullName;
     #[ORM\Column(length: 255)]
     private string $mail;
+
+    #[ORM\Column(length: 255)]
+    private string $password;
     #[ORM\Column(length: 255)]
     private string $status;
     #[ORM\Column(length: 255)]
     private string $avatar;
     #[ORM\Column(length: 255)]
     private \DateTime $startDate;
+
+    #[ORM\Column(type:"json")]
+    private $roles = [];
 
     #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'employees')]
     #[Groups(['employee_projects'])]
@@ -94,6 +105,23 @@ class Employee
     public function getFullName(): string
     {
         return $this->lastName . ' ' .  $this->firstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+        return $this;
     }
 
     /**
@@ -164,6 +192,24 @@ class Employee
         return $this;
     }
 
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        if (empty($roles)) {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
     /**
      * @return Collection
      */
@@ -231,5 +277,23 @@ class Employee
         $lastInitial = $this->lastName[0];
 
         $this->avatar = strtoupper($firstInitial . $lastInitial);
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function eraseCredentials()
+    {}
+
+    public function getUsername()
+    {
+        return $this->mail;
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        return $this->getUsername();
     }
 }
