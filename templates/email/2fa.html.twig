@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    {% include 'component/header.html.twig' with {'active': 'team'} %}
+
+    <main>
+        <header>
+            <div id="title-page">
+            </div>
+        </header>
+        <body>
+        <div id="content">
+            <div class="two-fa-container">
+                <p class="label"><label
+                            for="_auth_code">{{ "auth_code"|trans({}, 'SchebTwoFactorBundle') }} {{ twoFactorProvider }}
+                        :</label></p>
+
+                <form class="form" action="{{ checkPathUrl ? checkPathUrl: path(checkPathRoute) }}" method="post">
+                    <p class="widget">
+                        <input
+                                id="_auth_code"
+                                type="text"
+                                name="{{ authCodeParameterName }}"
+                                autocomplete="one-time-code"
+                                autofocus
+                        />
+                    </p>
+
+                    {% if displayTrustedOption %}
+
+                        <p class="widget">
+                            <label class="trusted-device-container" for="_trusted">
+                                <input
+                                        id="_trusted"
+                                        class="trusted-checkbox"
+                                        type="checkbox"
+                                        name="{{ trustedParameterName }}"/>
+                                {{ "trusted"|trans({}, 'SchebTwoFactorBundle') }}
+                            </label>
+                        </p>
+
+                    {% endif %}
+                    {% if isCsrfProtectionEnabled %}
+                        <input type="hidden" name="{{ csrfParameterName }}" value="{{ csrf_token(csrfTokenId) }}">
+                    {% endif %}
+                    <p class="submit"><input type="submit" value="{{ "login"|trans({}, 'SchebTwoFactorBundle') }}"/></p>
+                </form>
+
+                {# The logout link gives the user a way out if they can't complete two-factor authentication #}
+                <p class="cancel"><a href="{{ logoutPath }}">{{ "cancel"|trans({}, 'SchebTwoFactorBundle') }}</a></p>
+            </div>
+        </div>
+        </body>
+    </main>
+
+{% endblock %}
+
+{# Display current two-factor provider #}

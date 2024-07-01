@@ -67,10 +67,32 @@ html, body {
 }
 
 .access-denied-container {
-        display: flex;
-        flex-direction: column;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    }
+}
+
+.two-fa-container {
+      width: auto;
+      margin-left: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+  }
+
+.trusted-device-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.trusted-checkbox {
+    width: 20px;
+    margin-bottom: 0px;
+    margin-right: 10px;
+}
 
 .form-employees-container {
     height: 100px;

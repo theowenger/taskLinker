@@ -141,8 +141,13 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/ramsey/collection" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ramsey/uuid" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ramsey/uuid-doctrine" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/lcobucci/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/lcobucci/jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/clock" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/scheb/2fa-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/scheb/2fa-email" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/scheb/2fa-trusted-device" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/google-mailer" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

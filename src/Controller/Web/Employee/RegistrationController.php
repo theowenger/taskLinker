@@ -14,7 +14,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegistrationController extends AbstractController
 {
-
     #[Route('/registration', name: 'employee_registration')]
     public function __invoke(Request $request, ValidatorInterface $validator, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {

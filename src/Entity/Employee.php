@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -17,7 +18,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  * @method string getUserIdentifier()
  */
 #[Entity(repositoryClass:EmployeeRepository::class)]
-class Employee implements UserInterface, PasswordAuthenticatedUserInterface
+class Employee implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
 
     #[ORM\Id]
@@ -46,6 +47,9 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type:"json")]
     private $roles = [];
+
+    #[ORM\Column(type: "string", nullable: true)]
+    private $authCode;
 
     #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'employees')]
     #[Groups(['employee_projects'])]
@@ -295,5 +299,28 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
     public function __call(string $name, array $arguments)
     {
         return $this->getUsername();
+    }
+
+    public function isEmailAuthEnabled(): bool
+    {
+        return true;
+    }
+
+    public function getEmailAuthRecipient(): string
+    {
+        return $this->mail;
+    }
+
+    public function getEmailAuthCode(): ?string
+    {
+        if(null === $this->authCode){
+            throw new \LogicException("the mail authentication method has not been set");
+        }
+        return $this->authCode;
+    }
+
+    public function setEmailAuthCode(string $authCode): void
+    {
+        $this->authCode = $authCode;
     }
 }

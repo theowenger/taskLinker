@@ -28,7 +28,6 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
     {
 
         $html = $this->twig->render('bundles/TwigBundle/Exception/error403.html.twig',[]);
-        $content = 'coucou';
         return new Response($html, 403);
     }
 }
